@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package api.v1.user;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/KwokGH/kratos/api/v1/user;user";
+option java_multiple_files = true;
+option java_package = "api.v1.user";
+
+// The greeting service definition.
+service User {
+	// Sends a greeting
+	rpc Login (LoginReq) returns (LoginReply) {
+		option (google.api.http) = {
+			post: "/api/user/login",
+			body: "*",
+		};
+	}
+	rpc GetUserDetail (GetUserDetailReq) returns (UserDetailReply) {
+		option (google.api.http) = {
+			post: "/api/user/detail",
+			body: "*",
+		};
+	}
+}
+
+// The request message containing the user's name.
+message LoginReq {
+	string mobile =1;
+	string password =2;
+}
+
+// The response message containing the greetings
+message LoginReply {
+	string authentication = 1;
+	int32 failedCount = 2;
+	string user_id = 3;
+}
+
+message GetUserDetailReq {
+	string user_id = 1;
+}
+
+message UserDetailReply {
+	string user_id = 1;
+	string user_name = 2;
+}
