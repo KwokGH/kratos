@@ -11,3 +11,7 @@ func GetMd5(str string) string {
 	hasher.Write([]byte(str))
 	return hex.EncodeToString(hasher.Sum(nil))
 }
+
+func Encrypt(b []byte) (string, error) {
+	return "", nil
+}

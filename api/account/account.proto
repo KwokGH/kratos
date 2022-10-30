@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package api.account;
+import "google/api/annotations.proto";
+
+option go_package = "github.com/KwokGH/kratos/api/account;account";
+option java_multiple_files = true;
+option java_package = "api.account";
+
+service Account {
+	rpc Login(LoginReq) returns (LoginResp){
+		option (google.api.http) = {
+			post: "/account/login"
+			body: "*"
+		};
+	}
+
+	rpc Register(RegisterReq) returns (RegisterResp){
+		option (google.api.http) = {
+			post: "/account/register"
+			body: "*"
+		};
+	}
+}
+
+message LoginReq{
+	string phone = 1;
+	string password = 2;
+}
+
+message LoginResp {
+	string token = 1;
+}
+
+message RegisterReq{
+	string phone = 1;
+	string password = 2;
+}
+
+message RegisterResp {
+
+}

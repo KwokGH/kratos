@@ -1,5 +1,13 @@
 package entity
 
+type User struct {
+	ID       string `gorm:"id"`
+	UserName string `gorm:"user_name"`
+	Password string `gorm:"password"`
+	Phone    string `gorm:"phone"`
+	NickName string `gorm:"nick_name"`
+}
+
 type UserLoginRedisKeyPrefix string
 
 const (

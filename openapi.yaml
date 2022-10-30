@@ -1,0 +1,140 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: ""
+    version: 0.0.1
+paths:
+    /account/login:
+        post:
+            tags:
+                - Account
+            operationId: Account_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.account.LoginReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.account.LoginResp'
+    /account/register:
+        post:
+            tags:
+                - Account
+            operationId: Account_Register
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.account.RegisterReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.account.RegisterResp'
+    /api/user/detail:
+        post:
+            tags:
+                - User
+            operationId: User_GetUserDetail
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.user.GetUserDetailReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.user.UserDetailReply'
+    /api/user/login:
+        post:
+            tags:
+                - User
+            description: Sends a greeting
+            operationId: User_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.user.LoginReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.user.LoginReply'
+components:
+    schemas:
+        api.account.LoginReq:
+            type: object
+            properties:
+                phone:
+                    type: string
+                password:
+                    type: string
+        api.account.LoginResp:
+            type: object
+            properties:
+                token:
+                    type: string
+        api.account.RegisterReq:
+            type: object
+            properties:
+                phone:
+                    type: string
+                password:
+                    type: string
+        api.account.RegisterResp:
+            type: object
+            properties: {}
+        api.v1.user.GetUserDetailReq:
+            type: object
+            properties:
+                userId:
+                    type: string
+        api.v1.user.LoginReply:
+            type: object
+            properties:
+                authentication:
+                    type: string
+                failedCount:
+                    type: integer
+                    format: int32
+                userId:
+                    type: string
+            description: The response message containing the greetings
+        api.v1.user.LoginReq:
+            type: object
+            properties:
+                mobile:
+                    type: string
+                password:
+                    type: string
+            description: The request message containing the user's name.
+        api.v1.user.UserDetailReply:
+            type: object
+            properties:
+                userId:
+                    type: string
+                userName:
+                    type: string
+tags:
+    - name: Account
+    - name: User
+      description: The greeting service definition.
