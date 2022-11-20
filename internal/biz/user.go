@@ -9,12 +9,13 @@ import (
 	"github.com/KwokGH/kratos/pkg/utils"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/golang-jwt/jwt/v4"
+	"strings"
 	"time"
 )
 
 type IUserRepo interface {
 	FindByPhone(ctx context.Context, phone string) (*de.User, error)
-	CreateUser(ctx context.Context, user *de.User) (string, error)
+	CreateUser(ctx context.Context, input *be.RegisterInput) (string, error)
 }
 
 type UserUseCase struct {
@@ -32,11 +33,6 @@ func NewUserUseCase(authConfig *conf.Auth, userRepo IUserRepo, logger log.Logger
 }
 
 func (a *UserUseCase) Login(ctx context.Context, input *be.LoginInput) (token string, err error) {
-	// 校验参数
-	if err := input.Valid(); err != nil {
-		return "", err
-	}
-
 	userInfo, err := a.userRepo.FindByPhone(ctx, input.Phone)
 	if err != nil {
 		if err == entity.ErrRecordNotFound {
@@ -67,5 +63,14 @@ func (a *UserUseCase) Login(ctx context.Context, input *be.LoginInput) (token st
 }
 
 func (a *UserUseCase) Register(ctx context.Context, input *be.RegisterInput) (string, error) {
+	if strings.TrimSpace(input.NickName) == "" {
+		input.NickName = "昵称"
+	}
 
+	userID, err := a.userRepo.CreateUser(ctx, input)
+	if err != nil {
+		return "", err
+	}
+
+	return userID, nil
 }

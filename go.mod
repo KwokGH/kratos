@@ -3,6 +3,7 @@ module github.com/KwokGH/kratos
 go 1.18
 
 require (
+	github.com/envoyproxy/protoc-gen-validate v0.1.0
 	github.com/go-kratos/kratos/v2 v2.4.1
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-sql-driver/mysql v1.6.0
@@ -10,9 +11,9 @@ require (
 	github.com/google/wire v0.5.0
 	github.com/gorilla/handlers v1.4.2
 	github.com/zeromicro/go-zero v1.4.2
+	go.mongodb.org/mongo-driver v1.11.0
 	go.uber.org/automaxprocs v1.5.1
 	google.golang.org/genproto v0.0.0-20221014213838-99cd37c6964a
-	google.golang.org/grpc v1.50.1
 	google.golang.org/protobuf v1.28.1
 	gorm.io/driver/mysql v1.4.3
 	gorm.io/gorm v1.24.0
@@ -37,10 +38,10 @@ require (
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
 	go.opentelemetry.io/otel v1.11.0 // indirect
 	go.opentelemetry.io/otel/trace v1.11.0 // indirect
-	golang.org/x/net v0.0.0-20220909164309-bea034e7d591 // indirect
 	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f // indirect
 	golang.org/x/sys v0.0.0-20220919091848-fb04ddd9f9c8 // indirect
 	golang.org/x/text v0.3.8 // indirect
+	google.golang.org/grpc v1.50.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

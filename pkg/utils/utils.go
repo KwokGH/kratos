@@ -3,6 +3,7 @@ package utils
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 //获取md5
@@ -14,4 +15,8 @@ func GetMd5(str string) string {
 
 func Encrypt(b []byte) (string, error) {
 	return "", nil
+}
+
+func NewID() string {
+	return primitive.NewObjectID().Hex()
 }

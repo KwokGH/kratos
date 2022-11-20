@@ -12,6 +12,7 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/logging"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/middleware/selector"
+	"github.com/go-kratos/kratos/v2/middleware/validate"
 	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	jwt2 "github.com/golang-jwt/jwt/v4"
@@ -27,6 +28,7 @@ func NewHTTPServer(c *conf.Server,
 		http.Middleware(
 			recovery.Recovery(),
 			logging.Server(logger),
+			validate.Validator(),
 			selector.Server(
 				jwt.Server(func(token *jwt2.Token) (interface{}, error) {
 					return []byte(auth.JwtSecret), nil
@@ -61,7 +63,7 @@ func NewHTTPServer(c *conf.Server,
 func NewWhiteListMatcher() selector.MatchFunc {
 	whiteList := make(map[string]struct{})
 	whiteList["/api.v1.user.User/Login"] = struct{}{}
-	whiteList["/api.v1.user.User/GetUserDetail"] = struct{}{}
+	whiteList["/api.v1.user.User/Register"] = struct{}{}
 	return func(ctx context.Context, operation string) bool {
 		fmt.Println(operation)
 		if _, ok := whiteList[operation]; ok {

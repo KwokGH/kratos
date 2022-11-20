@@ -7,6 +7,7 @@
 package main
 
 import (
+	"github.com/KwokGH/kratos/internal/biz"
 	"github.com/KwokGH/kratos/internal/conf"
 	"github.com/KwokGH/kratos/internal/data"
 	"github.com/KwokGH/kratos/internal/server"
@@ -28,7 +29,8 @@ func wireApp(confServer *conf.Server, confData *conf.Data, auth *conf.Auth, logg
 		return nil, nil, err
 	}
 	iUserRepo := data.NewUserRepo(dataData, logger)
-	userService := service.NewUserService(iUserRepo, logger)
+	userUseCase := biz.NewUserUseCase(auth, iUserRepo, logger)
+	userService := service.NewUserService(userUseCase, logger)
 	httpServer := server.NewHTTPServer(confServer, userService, auth, logger)
 	app := newApp(logger, httpServer)
 	return app, func() {

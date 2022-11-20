@@ -124,6 +124,36 @@ func (s BaseDA) GetTx(ctx context.Context, db *DBContext, id interface{}, value 
 	return err
 }
 
+func (s BaseDA) First(ctx context.Context, condition Conditions, value interface{}) error {
+	db, err := GetDB(ctx)
+	if err != nil {
+		return err
+	}
+
+	return s.FindTx(ctx, db, condition, value)
+}
+
+func (s BaseDA) FindTx(ctx context.Context, db *DBContext, condition Conditions, value interface{}) error {
+	db.ResetCondition()
+
+	wheres, parameters := condition.GetConditions()
+	if len(wheres) > 0 {
+		db.DB = db.Where(strings.Join(wheres, " and "), parameters...)
+	}
+
+	orderBy := condition.GetOrderBy()
+	if orderBy != "" {
+		db.DB = db.Order(orderBy)
+	}
+
+	err := db.First(value).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (s BaseDA) Query(ctx context.Context, condition Conditions, values interface{}) error {
 	db, err := GetDB(ctx)
 	if err != nil {

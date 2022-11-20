@@ -6,9 +6,6 @@
   },
   "tags": [
     {
-      "name": "Home"
-    },
-    {
       "name": "User"
     }
   ],
@@ -19,7 +16,7 @@
     "application/json"
   ],
   "paths": {
-    "/api/user/login": {
+    "/api/login": {
       "post": {
         "summary": "Sends a greeting",
         "operationId": "User_Login",
@@ -40,7 +37,6 @@
         "parameters": [
           {
             "name": "body",
-            "description": "The request message containing the user's name.",
             "in": "body",
             "required": true,
             "schema": {
@@ -52,24 +48,41 @@
           "User"
         ]
       }
+    },
+    "/api/register": {
+      "post": {
+        "operationId": "User_Register",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/userRegisterReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/userRegisterReq"
+            }
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
     }
   },
   "definitions": {
-    "homeCreateHomeReply": {
-      "type": "object"
-    },
-    "homeDeleteHomeReply": {
-      "type": "object"
-    },
-    "homeGetHomeReply": {
-      "type": "object"
-    },
-    "homeListHomeReply": {
-      "type": "object"
-    },
-    "homeUpdateHomeReply": {
-      "type": "object"
-    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -100,29 +113,43 @@
     "userLoginReply": {
       "type": "object",
       "properties": {
-        "authentication": {
-          "type": "string"
-        },
-        "failedCount": {
-          "type": "string"
-        },
-        "user_id": {
+        "token": {
           "type": "string"
         }
-      },
-      "title": "The response message containing the greetings"
+      }
     },
     "userLoginReq": {
       "type": "object",
       "properties": {
-        "mobile": {
+        "phone": {
           "type": "string"
         },
         "password": {
           "type": "string"
         }
-      },
-      "description": "The request message containing the user's name."
+      }
+    },
+    "userRegisterReply": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "userRegisterReq": {
+      "type": "object",
+      "properties": {
+        "phone": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "nick_name": {
+          "type": "string"
+        }
+      }
     }
   }
 }

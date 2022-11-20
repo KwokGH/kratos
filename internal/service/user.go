@@ -2,9 +2,9 @@ package service
 
 import (
 	"context"
-	v1 "github.com/KwokGH/kratos/api/v1"
 	pb "github.com/KwokGH/kratos/api/v1/user"
 	"github.com/KwokGH/kratos/internal/biz"
+	"github.com/KwokGH/kratos/internal/entity"
 	"github.com/KwokGH/kratos/internal/entity/be"
 	"github.com/go-kratos/kratos/v2/log"
 )
@@ -16,8 +16,18 @@ type UserService struct {
 }
 
 func (s *UserService) Register(ctx context.Context, req *pb.RegisterReq) (*pb.RegisterReply, error) {
-	//TODO implement me
-	panic("implement me")
+	input := &be.RegisterInput{
+		NickName: req.NickName,
+		Phone:    req.Phone,
+		Password: req.Password,
+	}
+
+	userID, err := s.uuc.Register(ctx, input)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.RegisterReply{UserId: userID}, nil
 }
 
 func NewUserService(uuc *biz.UserUseCase, logger log.Logger) *UserService {
@@ -32,11 +42,11 @@ func (s *UserService) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginRep
 		Phone:    req.Phone,
 		Password: req.Password,
 	}
-	if input.Valid() != nil {
-		return nil, v1.ErrorBadRequest("参数不正确")
+	token, err := s.uuc.Login(ctx, input)
+	if err == entity.ErrRecordNotFound {
+		return nil, err
 	}
 
-	token, err := s.uuc.Login(ctx, input)
 	if err != nil {
 		return nil, err
 	}

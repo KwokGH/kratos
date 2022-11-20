@@ -31,17 +31,19 @@ type Saver interface {
 }
 
 type Geter interface {
-	Get(context.Context, interface{}, interface{}) error
-	GetTx(context.Context, *DBContext, interface{}, interface{}) error
+	Get(ctx context.Context, id interface{}, value interface{}) error
+	GetTx(ctx context.Context, tx *DBContext, id interface{}, value interface{}) error
 }
 
 type Querier interface {
-	Query(context.Context, Conditions, interface{}) error
-	QueryTx(context.Context, *DBContext, Conditions, interface{}) error
-	Count(context.Context, Conditions, interface{}) (int, error)
-	CountTx(context.Context, *DBContext, Conditions, interface{}) (int, error)
-	Page(context.Context, Conditions, interface{}) (int, error)
-	PageTx(context.Context, *DBContext, Conditions, interface{}) (int, error)
+	First(ctx context.Context, condition Conditions, value interface{}) error
+	FindTx(ctx context.Context, tx *DBContext, condition Conditions, value interface{}) error
+	Query(ctx context.Context, condition Conditions, values interface{}) error
+	QueryTx(ctx context.Context, tx *DBContext, condition Conditions, values interface{}) error
+	Count(ctx context.Context, condition Conditions, entity interface{}) (int, error)
+	CountTx(ctx context.Context, tx *DBContext, condition Conditions, entity interface{}) (int, error)
+	Page(ctx context.Context, condition Conditions, values interface{}) (int, error)
+	PageTx(ctx context.Context, tx *DBContext, condition Conditions, values interface{}) (int, error)
 	QueryRawSQL(context.Context, interface{}, string, ...interface{}) error
 	QueryRawSQLTx(context.Context, *DBContext, interface{}, string, ...interface{}) error
 }

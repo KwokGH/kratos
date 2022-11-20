@@ -18,6 +18,14 @@ kratos提供了http协议的protoc插件，在生成grpc的代码时，也会生
 5. 在biz层定义接口，编写逻辑代码
 6. 在data层实现biz定影的接口
 
+
+## 参数校验说明
+* (参考资源)[https://github.com/bufbuild/protoc-gen-validate]
+* 在定义proto文件，对每个字段做校验规则处理，让数据在源头及时纠正，仅做非业务方面的校准（是否为空，长度是否合法等）；
+* 通过将 validate 中间件注入到 http中，自动对参数根据 proto 中编写的规则进行校验。
+* 在useCase层，对数据做业务方面的校准； 
+* 在data层面，利用sql或gorm对字段做校验；
+
 ## 参考资源
 * [登录注册充血模式](https://mp.weixin.qq.com/s/ceGcCxomKIracEzIZxAB6g)
 * [登录注册贫血模式](https://mp.weixin.qq.com/s/TDC-HSKiWjz-hn9RgxqlyA)
