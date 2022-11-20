@@ -6,8 +6,8 @@ import (
 	"github.com/KwokGH/kratos/api/v1/user"
 	"github.com/KwokGH/kratos/internal/conf"
 	"github.com/KwokGH/kratos/internal/service"
+	"github.com/KwokGH/kratos/pkg/utils"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
 	"github.com/go-kratos/kratos/v2/middleware/logging"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
@@ -21,6 +21,7 @@ import (
 // NewHTTPServer new a HTTP server.
 func NewHTTPServer(c *conf.Server,
 	userService *service.UserService,
+	auth *conf.Auth,
 	logger log.Logger) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
@@ -28,9 +29,9 @@ func NewHTTPServer(c *conf.Server,
 			logging.Server(logger),
 			selector.Server(
 				jwt.Server(func(token *jwt2.Token) (interface{}, error) {
-					return []byte("123"), nil
+					return []byte(auth.JwtSecret), nil
 				}, jwt.WithSigningMethod(jwt2.SigningMethodHS256), jwt.WithClaims(func() jwt2.Claims {
-					return &jwt2.MapClaims{}
+					return &utils.LoginClaim{}
 				}))).
 				Match(NewWhiteListMatcher()).Build(),
 		),
@@ -73,16 +74,5 @@ func NewWhiteListMatcher() selector.MatchFunc {
 			return false
 		}
 		return true
-	}
-}
-
-func MyMiddleware() middleware.Middleware {
-	return func(handler middleware.Handler) middleware.Handler {
-		return func(ctx context.Context, req interface{}) (interface{}, error) {
-			if _, ok := transport.FromServerContext(ctx); ok {
-				return nil, nil
-			}
-			return nil, nil
-		}
 	}
 }

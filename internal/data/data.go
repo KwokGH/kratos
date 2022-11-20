@@ -2,13 +2,13 @@ package data
 
 import (
 	"context"
-	"fmt"
 	"github.com/KwokGH/kratos/internal/conf"
-	"github.com/KwokGH/kratos/pkg/dbo"
+	"github.com/KwokGH/kratos/internal/entity/de"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-redis/redis/v8"
 	"github.com/google/wire"
-	"time"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 // ProviderSet is data providers.
@@ -16,44 +16,54 @@ var ProviderSet = wire.NewSet(NewData, NewUserRepo)
 
 // Data .
 type Data struct {
+	db          *gorm.DB
 	redisClient *redis.Client
 }
 
 // NewData .
 func NewData(cfg *conf.Data, logger log.Logger) (*Data, func(), error) {
-	cleanup := func() {
-		log.NewHelper(logger).Info("closing the data resources")
+	l := log.NewHelper(logger)
+
+	// mysql gorm db
+	db, err := gorm.Open(mysql.Open(cfg.GetDatabase().GetSource()), &gorm.Config{})
+	if err != nil {
+		l.Info("数据库初时候失败")
+		return nil, nil, err
 	}
 
-	initMysql(cfg)
+	cleanup := func() {
+		l.Info("closing the data resources")
+	}
 
+	// redis
 	rdb := redis.NewClient(&redis.Options{
 		Addr: "127.0.0.1:6379",
 	})
 	if err := rdb.Ping(context.Background()).Err(); err != nil {
-		fmt.Println("redis连接失败")
-		panic(err)
+		l.Info("redis连接失败")
+		return nil, nil, err
 	} else {
-		fmt.Println("redis连接成功")
+		l.Info("redis连接成功")
+	}
+
+	if err := initTable(db); err != nil {
+		return nil, cleanup, err
 	}
 
 	return &Data{
+		db:          db,
 		redisClient: rdb,
 	}, cleanup, nil
 }
 
-func initMysql(cfg *conf.Data) {
-	dboHandler, err := dbo.NewWithConfig(func(c *dbo.Config) {
-		c.DBType = dbo.DBType(cfg.Database.Driver)
-		c.MaxIdleConns = 64             //dbConf.MaxIdleConns
-		c.MaxOpenConns = 64             //dbConf.MaxOpenConns
-		c.ConnMaxLifetime = time.Minute //dbConf.ConnMaxLifetime
-		c.ConnectionString = cfg.Database.Source
-		c.LogLevel = dbo.Info
-	})
+func initTable(db *gorm.DB) error {
+	err := db.AutoMigrate(
+		&de.User{})
+
 	if err != nil {
-		panic("create dbo failed" + err.Error())
+		log.Error(err)
+		return err
 	}
 
-	dbo.ReplaceGlobal(dboHandler)
+	return nil
 }

@@ -17,3 +17,7 @@ kratos提供了http协议的protoc插件，在生成grpc的代码时，也会生
    3. 执行```make config```生成pb文件
 5. 在biz层定义接口，编写逻辑代码
 6. 在data层实现biz定影的接口
+
+## 参考资源
+* [登录注册充血模式](https://mp.weixin.qq.com/s/ceGcCxomKIracEzIZxAB6g)
+* [登录注册贫血模式](https://mp.weixin.qq.com/s/TDC-HSKiWjz-hn9RgxqlyA)
